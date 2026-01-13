@@ -41,7 +41,7 @@
 
                                         <div class="form-body">
 
-                                            <!-- Ligne 1 : ville départ, ville arrivée, dates et heures -->
+                                            <!-- Ligne 1 : ville depart, ville arrivee, dates et heures -->
                                             <div class="form-group row">
                                                 <div class="col-md-2">
                                                     <label class="label-control">Ville de depart</label>
@@ -50,7 +50,7 @@
                                                         <c:forEach var="v" items="${villesDepart}">
                                                             <option value="${v.id}"
                                                                     ${param.idGareDepart == v.id ? 'selected' : ''}>
-                                                                ${v.ville}
+                                                                ${v.ville} (${v.nom})
                                                             </option>
                                                         </c:forEach>
                                                     </select>
@@ -63,7 +63,7 @@
                                                         <c:forEach var="v" items="${villesArrivee}">
                                                             <option value="${v.id}"
                                                                     ${param.idGareArrivee == v.id ? 'selected' : ''}>
-                                                                ${v.ville}
+                                                                ${v.ville} (${v.nom})
                                                             </option>
                                                         </c:forEach>
                                                     </select>

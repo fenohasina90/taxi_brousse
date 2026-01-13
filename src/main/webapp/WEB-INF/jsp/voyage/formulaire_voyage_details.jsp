@@ -12,7 +12,7 @@
 
         <div class="content-header row">
             <div class="content-header-left col-md-6 col-12 mb-2">
-                <h3 class="content-header-title">Ajouter un détail de voyage</h3>
+                <h3 class="content-header-title">Ajouter un detail de voyage</h3>
             </div>
             <div class="content-header-right col-md-6 col-12 mb-2 text-right">
                 <a href="${pageContext.request.contextPath}/voyages" class="btn btn-secondary">
@@ -83,9 +83,9 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Heure de départ -->
+                                            <!-- Heure de depart -->
                                             <div class="form-group row">
-                                                <label class="col-md-3 label-control">Heure de départ</label>
+                                                <label class="col-md-3 label-control">Heure de depart</label>
                                                 <div class="col-md-9">
                                                     <input type="time"
                                                            name="heure_depart"

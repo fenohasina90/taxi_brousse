@@ -23,6 +23,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
         AND (CAST(:dateFin AS TEXT) IS NULL OR date_voyage <= CAST(:dateFin AS DATE))
         AND (CAST(:heureDebut AS TEXT) IS NULL OR heure_depart >= CAST(:heureDebut AS TIME))
         AND (CAST(:heureFin AS TEXT) IS NULL OR heure_depart <= CAST(:heureFin AS TIME))
+        AND status_reservation != 'ANNULE'
         ORDER BY date_voyage DESC, heure_depart ASC, id_reservation DESC
         """, nativeQuery = true)
     List<ReservationListProjection> listerReservationsFiltrees(

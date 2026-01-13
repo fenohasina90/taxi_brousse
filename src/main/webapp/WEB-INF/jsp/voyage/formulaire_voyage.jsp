@@ -16,7 +16,7 @@
                 <h3 class="content-header-title">Formulaire - Creer un voyage</h3>
             </div>
             <div class="content-header-right col-md-6 col-12 mb-2 text-right">
-                <a href="/voyages/planning" class="btn btn-secondary">
+                <a href="/voyages" class="btn btn-secondary">
                     <i class="la la-list"></i> Liste des voyages
                 </a>
             </div>

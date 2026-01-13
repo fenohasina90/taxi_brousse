@@ -123,7 +123,7 @@
                                 <div class="card-body">
 
                                     <c:if test="${empty voyages}">
-                                        <p>Aucun voyage trouve pour les critères selectionnes.</p>
+                                        <p>Aucun voyage trouve pour les criteres selectionnes.</p>
                                     </c:if>
 
                                     <c:if test="${not empty voyages}">

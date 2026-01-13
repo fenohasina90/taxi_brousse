@@ -1,0 +1,97 @@
+/*================================================================================
+	Item Name: Modern Admin - Clean Bootstrap 4 Dashboard HTML Template
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+.suggestion-item {
+  cursor: pointer;
+}
+
+.seat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chauffeur {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px !important;
+  height: 52px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #f9f9f9;
+}
+
+.seat-selected {
+  background-color: #28a745 !important;
+  border-color: #1e7e34 !important;
+}
+
+.seat-selected span {
+  color: #1f1f1f !important;  /* ou #28a745 si tu veux uniquement le texte en vert */
+  font-weight: bold;                /* numéro de siège en noir */
+}
+
+.chauffeur span {
+  font-weight: bold;
+  font-size: 11px;
+  text-align: center;
+  white-space: normal;
+}
+
+.seat-row {
+  display: flex;
+  gap: 15px;
+}
+
+.seat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #f9f9f9;
+}
+
+.seat input {
+  cursor: pointer;
+}
+
+.seat span {
+  font-weight: bold;
+  font-size: 11px;
+  text-align: center;
+  white-space: normal;
+}
+
+.seat:hover {
+  background: #e6f0ff;
+}
+
+.seat-disabled {
+  background: #eee;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.seat-disabled input {
+  cursor: not-allowed;
+}

@@ -259,6 +259,27 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         </ul>
       </li>
 
+      <li class="nav-item">
+        <a href="#">
+          <i class="la la-car"></i>
+          <span class="menu-title" data-i18n="Dashboard">VOITURE</span>
+        </a>
+        <ul class="menu-content">
+          <li>
+            <a class="menu-item" href="/voitures/ajouter">
+              <i class="la la-plus-circle"></i>
+              <span data-i18n="eCommerce">Saisie</span>
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" href="/voitures">
+              <i class="la la-list-ul"></i>
+              <span data-i18n="eCommerce">Liste</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
       <!-- RESERVATION -->
       <li class="nav-item">
         <a href="#">
@@ -285,7 +306,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       <li class="nav-item">
         <a href="#">
           <i class="la la-road"></i>
-          <span class="menu-title" data-i18n="Dashboard">TRAJETS &amp; TARIFS</span>
+          <span class="menu-title" data-i18n="Dashboard"
+            >TRAJETS &amp; TARIFS</span
+          >
         </a>
         <ul class="menu-content">
           <li>
@@ -302,7 +325,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </li>
         </ul>
       </li>
-
     </ul>
   </div>
 </div>

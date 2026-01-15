@@ -43,7 +43,7 @@
 
                                             <!-- Ligne 1 : ville depart, ville arrivee, dates et heures -->
                                             <div class="form-group row">
-                                                <div class="col-md-2">
+                                                <div class="col-md-3">
                                                     <label class="label-control">Ville de depart</label>
                                                     <select class="form-control" name="idGareDepart">
                                                         <option value="">-- Toutes --</option>
@@ -56,7 +56,7 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-md-2">
+                                                <div class="col-md-3">
                                                     <label class="label-control">Ville d'arrivee</label>
                                                     <select class="form-control" name="idGareArrivee">
                                                         <option value="">-- Toutes --</option>
@@ -69,59 +69,7 @@
                                                     </select>
                                                 </div>
 
-                                                <div class="col-md-2">
-                                                    <label class="label-control">Date debut</label>
-                                                    <input type="date" class="form-control" name="dateDebut"
-                                                           value="${param.dateDebut}">
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <label class="label-control">Date fin</label>
-                                                    <input type="date" class="form-control" name="dateFin"
-                                                           value="${param.dateFin}">
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <label class="label-control">Heure debut</label>
-                                                    <input type="time" class="form-control" name="heureDebut"
-                                                           value="${param.heureDebut}">
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <label class="label-control">Heure fin</label>
-                                                    <input type="time" class="form-control" name="heureFin"
-                                                           value="${param.heureFin}">
-                                                </div>
-                                            </div>
-
-                                            <!-- Ligne 2 : type, tarif, places -->
-                                            <div class="form-group row">
-                                                <div class="col-md-3">
-                                                    <label class="label-control">Type du voyage</label>
-                                                    <select class="form-control" name="idTypeVoyage">
-                                                        <option value="">-- Tous --</option>
-                                                        <c:forEach var="s" items="${statusVoyages}">
-                                                            <option value="${s.id}"
-                                                                    ${param.idTypeVoyage == s.id ? 'selected' : ''}>
-                                                                ${s.description}
-                                                            </option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <label class="label-control">Tarif minimum</label>
-                                                    <input type="number" step="0.01" class="form-control" name="tarifMin"
-                                                           value="${param.tarifMin}" placeholder="Tarif minimum ...">
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <label class="label-control">Tarif maximum</label>
-                                                    <input type="number" step="0.01" class="form-control" name="tarifMax"
-                                                           value="${param.tarifMax}" placeholder="Tarif maximum ...">
-                                                </div>
-
-                                                <div class="col-md-3">
+                                                <div class="col-md-6">
                                                     <label class="label-control">Places disponibles</label>
                                                     <div class="row">
                                                         <div class="col-6 pr-1">
@@ -134,6 +82,62 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                
+                                            </div>
+
+                                            <!-- Ligne 2 : type, tarif, places -->
+                                            <div class="form-group row">
+
+                                                <div class="col-md-3">
+                                                    <label class="label-control">Date debut</label>
+                                                    <input type="date" class="form-control" name="dateDebut"
+                                                           value="${param.dateDebut}">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label class="label-control">Date fin</label>
+                                                    <input type="date" class="form-control" name="dateFin"
+                                                           value="${param.dateFin}">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label class="label-control">Heure debut</label>
+                                                    <input type="time" class="form-control" name="heureDebut"
+                                                           value="${param.heureDebut}">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label class="label-control">Heure fin</label>
+                                                    <input type="time" class="form-control" name="heureFin"
+                                                           value="${param.heureFin}">
+                                                </div>
+                                                <!-- <div class="col-md-3">
+                                                    <label class="label-control">Type du voyage</label>
+                                                    <select class="form-control" name="idTypeVoyage">
+                                                        <option value="">-- Tous --</option>
+                                                        <c:forEach var="s" items="${statusVoyages}">
+                                                            <option value="${s.id}"
+                                                                    ${param.idTypeVoyage == s.id ? 'selected' : ''}>
+                                                                ${s.description}
+                                                            </option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div> -->
+
+                                                <!-- <div class="col-md-4">
+                                                    <label class="label-control">Tarif minimum</label>
+                                                    <input type="number" step="0.01" class="form-control" name="tarifMin"
+                                                           value="${param.tarifMin}" placeholder="Tarif minimum ...">
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <label class="label-control">Tarif maximum</label>
+                                                    <input type="number" step="0.01" class="form-control" name="tarifMax"
+                                                           value="${param.tarifMax}" placeholder="Tarif maximum ...">
+                                                </div> -->
+
+                                                
                                             </div>
 
                                             <!-- Boutons -->
@@ -172,8 +176,8 @@
                                                     <th>Distance</th> -->
                                                     <th>Voiture</th>
                                                     <th>Place Disponible</th>
-                                                    <th>Type Voyage</th>
-                                                    <th>Tarif (Ar)</th>
+                                                    <!-- <th>Type Voyage</th> -->
+                                                    <!-- <th>Tarif (Ar)</th> -->
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -187,12 +191,12 @@
                                                         <td>${v.distance}</td> -->
                                                         <td>${v.immatricule}</td>
                                                         <td>${v.placesDisponibles}</td>
-                                                        <td>
+                                                        <!-- <td>
                                                             <span class="badge badge-info">
                                                                 ${v.typeVoyage}
                                                             </span>
-                                                        </td>
-                                                        <td>${v.tarif}</td>
+                                                        </td> -->
+                                                        <!-- <td>${v.tarif}</td> -->
                                                         <td>
                                                             <a href="/reservations/ajouter/${v.idVoyageDetails}" class="btn btn-primary btn-sm">Reserver</a>
                                                         </td>

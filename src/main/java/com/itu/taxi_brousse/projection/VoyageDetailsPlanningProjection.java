@@ -13,4 +13,5 @@ public interface VoyageDetailsPlanningProjection {
     String getTypeVoyage();
     Double getTarif();
     Double getTotalChiffreAffaire();
+    Double getMaxChiffreAffaire();
 }

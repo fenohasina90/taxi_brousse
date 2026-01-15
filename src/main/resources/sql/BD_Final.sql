@@ -1,3 +1,6 @@
+
+
+
 create table voiture (
     id serial primary key,
     immatricule varchar(20) not null unique,
@@ -24,10 +27,12 @@ create table trajet (
 
 
 -- Planification voyages
+
 create table type_voyage (
     id serial primary key,
     description varchar(100) not null unique
 );
+
 
 create table voyage(
     id serial primary key,
@@ -44,6 +49,15 @@ create table voyage_details(
     heure_depart time not null,
     unique (id_voyage, id_voiture)
 );
+
+create table voyage_details_place_type (
+    id serial primary key,
+    id_voyage_details int not null references voyage_details(id),
+    numero_place int not null,
+    id_type_voyage int not null references type_voyage(id),
+    unique (id_voyage_details, numero_place)
+);
+
 
 -- Tarif
 

@@ -103,7 +103,6 @@
                                             </div>
                                             
                                             <input type="hidden" id="montantUnitaire" value="${montantUnitaire}">
-                                            <input type="hidden" name="montantFinal" id="montantFinal" value="0">
 
                                             <div class="form-group row">
                                                 <label class="col-md-3 label-control">
@@ -125,9 +124,9 @@
                                                 </label>
                                                 <div class="col-md-9">
                                                     <input type="number"
-                                                           name="montant"
-                                                           class="form-control"
-                                                           placeholder="Montant en Ariary ...">
+                                                            name="montant"
+                                                            class="form-control"
+                                                            placeholder="Montant en Ariary ...">
                                                 </div>
                                             </div>
 
@@ -247,20 +246,21 @@
     document.addEventListener("DOMContentLoaded", function () {
 
         const checkboxes = document.querySelectorAll(".seat-checkbox");
-        const montantUnitaire = parseInt(document.getElementById("montantUnitaire").value);
-        const montantFinalInput = document.getElementById("montantFinal");
         const montantAffiche = document.getElementById("montantAffiche");
 
+        // Map des tarifs par numero de place, fournie par le backend
+        const tarifParPlace = JSON.parse('${tarifParPlaceJson}');
+
         function calculerMontant() {
-            let nbCoche = 0;
+            let total = 0;
 
             checkboxes.forEach(cb => {
-                if (cb.checked) nbCoche++;
+                if (cb.checked) {
+                    const num = parseInt(cb.value, 10);
+                    const tarif = tarifParPlace[num] !== undefined ? parseFloat(tarifParPlace[num]) : 0;
+                    total += isNaN(tarif) ? 0 : tarif;
+                }
             });
-
-            const total = nbCoche * montantUnitaire;
-
-            montantFinalInput.value = total;
 
             if (montantAffiche) {
                 montantAffiche.value = total.toLocaleString('fr-FR') + " Ar";

@@ -46,7 +46,17 @@ SELECT
     COALESCE(SUM(CASE 
         WHEN rs.status != 'ANNULE' THEN r.total_amount 
         ELSE 0 
-    END), 0.00) AS total_chiffre_affaire
+    END), 0.00) AS total_chiffre_affaire,
+    (
+        SELECT COALESCE(SUM(ta2.montant), 0.00)
+        FROM voyage_details_place_type vpt
+        JOIN type_voyage tv2 ON vpt.id_type_voyage = tv2.id
+        JOIN voyage_details vd2 ON vd2.id = vpt.id_voyage_details
+        JOIN voyage v2 ON v2.id = vd2.id_voyage
+        JOIN trajet t2 ON t2.id = v2.id_trajet
+        JOIN tarif_actuel ta2 ON ta2.id_trajet = t2.id AND ta2.id_type_voyage = tv2.id
+        WHERE vpt.id_voyage_details = vd.id
+    ) AS max_chiffre_affaire
 FROM voyage v
 JOIN trajet t ON v.id_trajet = t.id
 JOIN voyage_details vd ON v.id = vd.id_voyage

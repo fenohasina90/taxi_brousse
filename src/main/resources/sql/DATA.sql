@@ -41,9 +41,9 @@ INSERT INTO gare_routiere (nom, ville, contact) VALUES
 -- ('2026-12-25'); -- Noël
 
 INSERT INTO type_voyage (description) VALUES
-('Economique'),
+('VIP'),
 ('Premium'),
-('VIP');
+('Economique');
 
 INSERT INTO mode_paiement (mode) VALUES
 ('Espèces'),

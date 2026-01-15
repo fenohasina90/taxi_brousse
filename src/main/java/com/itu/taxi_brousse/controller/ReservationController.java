@@ -134,6 +134,7 @@ public class ReservationController {
         mv.addObject("placesAutorisees", reservationService.obtenirPlacesDisponibles(idVoyageDetails));
         mv.addObject("totalPlaces", reservationService.getCapaciteVoiture(idVoyageDetails));
         mv.addObject("montantUnitaire", reservationService.getTarifUnitaire(idVoyageDetails));
+        mv.addObject("tarifParPlaceJson", reservationService.getTarifParPlaceJson(idVoyageDetails));
         mv.addObject("idVoyageDetails", idVoyageDetails);
         mv.addObject("modePaiement",paiementService.getListModePaiements());
         return mv;
@@ -146,7 +147,6 @@ public class ReservationController {
             @RequestParam(value = "montant", required = false) Double montantVerse,
             @RequestParam("nom_client") String nomClient,
             @RequestParam("contactClient") String contactClient,
-            @RequestParam("montantFinal") Double montantFinal,
             @RequestParam("places") List<Integer> places,
             RedirectAttributes redirectAttributes
     ) {
@@ -155,7 +155,6 @@ public class ReservationController {
                     idVoyageDetails,
                     nomClient,
                     contactClient,
-                    montantFinal != null ? montantFinal : 0.0,
                     places,
                     idTypePaiement,
                     montantVerse != null ? montantVerse : 0.0

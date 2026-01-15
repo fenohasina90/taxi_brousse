@@ -189,9 +189,10 @@
                                                             <th>Places totales</th>
                                                             <th>Place disponible</th>
                                                             <th>Total reservations</th>
-                                                            <th>Type voyage</th>
-                                                            <th>Tarif (Ar)</th>
+                                                            <!-- <th>Type voyage</th>
+                                                            <th>Tarif (Ar)</th> -->
                                                             <th>Total chiffre d'affaire (Ar)</th>
+                                                            <th>CA maximum (Ar)</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -202,9 +203,14 @@
                                                                 <td>${d.nbPlaceTotal}</td>
                                                                 <td>${d.placesDisponibles}</td>
                                                                 <td>${d.nombreReservations}</td>
-                                                                <td>${d.typeVoyage}</td>
-                                                                <td>${d.tarif}</td>
-                                                                <td>${d.totalChiffreAffaire}</td>
+                                                                <!-- <td>${d.typeVoyage}</td>
+                                                                <td>${d.tarif}</td> -->
+                                                                <td>
+                                                                    <fmt:formatNumber value="${d.totalChiffreAffaire}" type="number" pattern="#,##0.00" />
+                                                                </td>
+                                                                <td>
+                                                                    <fmt:formatNumber value="${d.maxChiffreAffaire}" type="number" pattern="#,##0.00" />
+                                                                </td>
                                                             </tr>
                                                         </c:forEach>
                                                         </tbody>

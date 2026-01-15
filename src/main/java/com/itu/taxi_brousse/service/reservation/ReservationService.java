@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import com.itu.taxi_brousse.entity.reservation.ReservationStatus;
 import com.itu.taxi_brousse.entity.tarif.TarifActuel;
 import com.itu.taxi_brousse.entity.voyage.TypeVoyage;
 import com.itu.taxi_brousse.entity.voyage.VoyageDetails;
+import com.itu.taxi_brousse.entity.voyage.VoyageDetailsPlaceType;
 import com.itu.taxi_brousse.entity.voyage.VoyagePassager;
 import com.itu.taxi_brousse.projection.ReservationListProjection;
 import com.itu.taxi_brousse.repository.client.ClientRepository;
@@ -25,6 +27,7 @@ import com.itu.taxi_brousse.repository.reservation.ReservationRepository;
 import com.itu.taxi_brousse.repository.reservation.ReservationSiegeRepository;
 import com.itu.taxi_brousse.repository.reservation.ReservationStatusRepository;
 import com.itu.taxi_brousse.repository.voyage.VoyageDetailsRepository;
+import com.itu.taxi_brousse.repository.voyage.VoyageDetailsPlaceTypeRepository;
 import com.itu.taxi_brousse.service.paiement.paiementService;
 import com.itu.taxi_brousse.service.tarif.TarifService;
 import com.itu.taxi_brousse.service.voyage.VoyagePassagerService;
@@ -40,6 +43,7 @@ public class ReservationService {
     private final paiementService paiementService;
     private final VoyagePassagerService voyagePassagerService;
     private final TarifService tarifService;
+    private final VoyageDetailsPlaceTypeRepository voyageDetailsPlaceTypeRepository;
 
     public ReservationService(ReservationRepository reservationRepository,
                               ReservationSiegeRepository reservationSiegeRepository,
@@ -48,7 +52,8 @@ public class ReservationService {
                               ReservationStatusRepository reservationStatusRepository,
                               paiementService paiementService,
                               VoyagePassagerService voyagePassagerService,
-                              TarifService tarifService) {
+                              TarifService tarifService,
+                              VoyageDetailsPlaceTypeRepository voyageDetailsPlaceTypeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationSiegeRepository = reservationSiegeRepository;
         this.clientRepository = clientRepository;
@@ -57,6 +62,32 @@ public class ReservationService {
         this.paiementService = paiementService;
         this.voyagePassagerService = voyagePassagerService;
         this.tarifService = tarifService;
+        this.voyageDetailsPlaceTypeRepository = voyageDetailsPlaceTypeRepository;
+    }
+
+    public String getTarifParPlaceJson(Integer idVoyageDetails) {
+        VoyageDetails voyageDetails = voyageDetailsRepository.findById(idVoyageDetails)
+                .orElseThrow(() -> new IllegalArgumentException("Voyage introuvable"));
+
+        Trajet trajet = voyageDetails.getVoyage().getTrajet();
+
+        Map<Integer, Double> map = voyageDetailsPlaceTypeRepository
+                .findAllByVoyageDetailsId(idVoyageDetails)
+                .stream()
+                .collect(Collectors.toMap(
+                        VoyageDetailsPlaceType::getNumeroPlace,
+                        vpt -> {
+                            TypeVoyage type = vpt.getTypeVoyage();
+                            TarifActuel tarif = tarifService.getTarifActuel(trajet, type);
+                            return tarif != null ? tarif.getMontant() : 0.0;
+                        }
+                ));
+
+        String json = map.entrySet().stream()
+                .map(e -> "\"" + e.getKey() + "\":" + e.getValue())
+                .collect(Collectors.joining(","));
+
+        return "{" + json + "}";
     }
 
     public List<ReservationListProjection> listerReservationsFiltrees(
@@ -126,7 +157,6 @@ public class ReservationService {
     public Reservation creerReservation(Integer idVoyageDetails,
                                         String nomClient,
                                         String contactClient,
-                                        double montantTotal,
                                         List<Integer> numerosPlaces,
                                         Integer idTypePaiement,
                                         double montantVerse) {
@@ -134,6 +164,8 @@ public class ReservationService {
         if (numerosPlaces == null || numerosPlaces.isEmpty()) {
             throw new IllegalArgumentException("Au moins une place doit etre selectionnee");
         }
+
+        double montantTotal = calculerMontantTotal(idVoyageDetails, numerosPlaces);
 
         if (montantVerse > montantTotal) {
             throw new IllegalArgumentException("Le montant verse ne peut pas etre superieur au montant total");
@@ -182,5 +214,30 @@ public class ReservationService {
         }
 
         return reservation;
+    }
+
+    private double calculerMontantTotal(Integer idVoyageDetails, List<Integer> numerosPlaces) {
+        VoyageDetails voyageDetails = voyageDetailsRepository.findById(idVoyageDetails)
+                .orElseThrow(() -> new IllegalArgumentException("Voyage introuvable"));
+
+        Trajet trajet = voyageDetails.getVoyage().getTrajet();
+        double total = 0.0;
+
+        for (Integer numeroPlace : numerosPlaces) {
+            VoyageDetailsPlaceType mapping = voyageDetailsPlaceTypeRepository
+                    .findByVoyageDetailsIdAndNumeroPlace(idVoyageDetails, numeroPlace)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Type de place non configure pour le siege " + numeroPlace));
+
+            TypeVoyage typePlace = mapping.getTypeVoyage();
+            TarifActuel tarif = tarifService.getTarifActuel(trajet, typePlace);
+            if (tarif == null) {
+                throw new IllegalArgumentException("Tarif introuvable pour le type de place " + typePlace.getDescription());
+            }
+
+            total += tarif.getMontant();
+        }
+
+        return total;
     }
 }

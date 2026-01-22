@@ -58,7 +58,7 @@
                                             <div class="form-group row">
                                                 <label class="col-md-3 label-control">Date de paiement</label>
                                                 <div class="col-md-9">
-                                                    <input type="datetime-local" class="form-control" name="datePaiement" required>
+                                                    <input type="datetime-local" class="form-control" name="datePaiement" id="datePaiement" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -86,5 +86,16 @@
 </div>
 
 <%@ include file="/WEB-INF/jsp/layout/footer.jsp"%>
+
+<script type="text/javascript">
+    (function () {
+        var input = document.getElementById('datePaiement');
+        if (!input || input.value) return;
+        var d = new Date();
+        var pad = function (n) { return String(n).padStart(2, '0'); };
+        var value = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+        input.value = value;
+    })();
+</script>
 </body>
 </html>

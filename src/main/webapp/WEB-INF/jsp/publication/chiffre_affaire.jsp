@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/jsp/layout/header.jsp"%>
 
 <body class="vertical-layout vertical-menu 2-columns fixed-navbar"
@@ -79,11 +80,11 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h4 class="card-title mb-0">Resultats</h4>
                                 <div>
-                                    <strong>Total CA:</strong> ${totalCa}
+                                    <strong>Total CA:</strong> <fmt:formatNumber value="${totalCa}" type="number" pattern="#,##0.00" />
                                     &nbsp;|&nbsp;
-                                    <strong>Deja paye:</strong> ${totalPaye}
+                                    <strong>Deja paye:</strong> <fmt:formatNumber value="${totalPaye}" type="number" pattern="#,##0.00" />
                                     &nbsp;|&nbsp;
-                                    <strong>Reste a payer:</strong> ${totalReste}
+                                    <strong>Reste a payer:</strong> <fmt:formatNumber value="${totalReste}" type="number" pattern="#,##0.00" />
                                 </div>
                             </div>
                             <div class="card-content">
@@ -114,10 +115,18 @@
                                                     <td>${r.societe}</td>
                                                     <td>${r.titre}</td>
                                                     <td>${r.totalRepetition}</td>
-                                                    <td>${r.montantUnitaire}</td>
-                                                    <td>${r.chiffreAffaires}</td>
-                                                    <td>${r.montantPaye}</td>
-                                                    <td>${r.resteAPayer}</td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${r.montantUnitaire}" type="number" pattern="#,##0.00" />
+                                                    </td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${r.chiffreAffaires}" type="number" pattern="#,##0.00" />
+                                                    </td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${r.montantPaye}" type="number" pattern="#,##0.00" />
+                                                    </td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${r.resteAPayer}" type="number" pattern="#,##0.00" />
+                                                    </td>
                                                 </tr>
                                             </c:forEach>
                                             </tbody>

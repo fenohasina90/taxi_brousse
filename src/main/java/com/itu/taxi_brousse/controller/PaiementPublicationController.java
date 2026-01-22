@@ -46,7 +46,7 @@ public class PaiementPublicationController {
     public ModelAndView traiter(
             @RequestParam("idVoyagePub") Integer idVoyagePub,
             @RequestParam("montant") double montant,
-            @RequestParam("datePaiement") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime datePaiement,
+            @RequestParam("datePaiement") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime datePaiement,
             RedirectAttributes redirectAttributes
     ) {
         try {

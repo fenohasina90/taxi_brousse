@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/jsp/layout/header.jsp"%>
 
 <body class="vertical-layout vertical-menu 2-columns fixed-navbar"
@@ -96,9 +97,15 @@
                                                     <td>${e.societe}</td>
                                                     <td>${e.titre}</td>
                                                     <td>${e.nbRepetition}</td>
-                                                    <td>${e.totalAPayer}</td>
-                                                    <td>${e.montantPaye}</td>
-                                                    <td>${e.resteAPayer}</td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${e.totalAPayer}" type="number" pattern="#,##0.00" />  
+                                                    </td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${e.montantPaye}" type="number" pattern="#,##0.00" />
+                                                    </td>
+                                                    <td>
+                                                        <fmt:formatNumber value="${e.resteAPayer}" type="number" pattern="#,##0.00" />
+                                                    </td>
                                                     <td>
                                                         <a class="btn btn-sm btn-success"
                                                            href="${pageContext.request.contextPath}/publications/paiements/ajouter?idVoyagePub=${e.idVoyagePub}">

@@ -161,3 +161,28 @@ JOIN trajet t ON ta.id_trajet = t.id
 JOIN gare_routiere gd ON t.gare_depart = gd.id
 JOIN gare_routiere ga ON t.gare_arrivee = ga.id
 JOIN type_voyage tv ON ta.id_type_voyage = tv.id;
+
+
+-- Chiffre d'affaires des diffusions des publications (filtrer ensuite avec BETWEEN sur date_voyage)
+CREATE OR REPLACE VIEW v_ca_publication_diffusion AS
+SELECT
+    v.date_voyage,
+    p.id AS id_publication,
+    p.titre,
+    s.id AS id_societe,
+    s.nom AS societe,
+    COALESCE(SUM(COALESCE(vp.nb_repetition, 0)), 0) AS total_repetition,
+    COALESCE(p.montant, 0.00) AS montant_unitaire,
+    COALESCE(SUM(COALESCE(vp.nb_repetition, 0) * COALESCE(p.montant, 0.00)), 0.00) AS chiffre_affaires
+FROM voyage_pub vp
+JOIN publication p ON vp.id_publication = p.id
+LEFT JOIN societe s ON p.id_societe = s.id
+JOIN voyage_details vd ON vp.id_voyage_details = vd.id
+JOIN voyage v ON vd.id_voyage = v.id
+GROUP BY
+    v.date_voyage,
+    p.id,
+    p.titre,
+    s.id,
+    s.nom,
+    p.montant;

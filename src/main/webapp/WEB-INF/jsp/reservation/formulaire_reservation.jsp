@@ -87,6 +87,24 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Composition par categories de clients -->
+                                            <c:if test="${not empty categoriesClient}">
+                                                <c:forEach var="cat" items="${categoriesClient}">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-3 label-control">
+                                                            ${cat.nom}
+                                                        </label>
+                                                        <div class="col-md-3">
+                                                            <input type="number"
+                                                                   name="nbCategorie_${cat.id}"
+                                                                   class="form-control"
+                                                                   min="0"
+                                                                   value="0">
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </c:if>
+
                                             <!-- Paiement -->
                                             <div class="form-group row">
                                                 <label class="col-md-3 label-control">Type de paiement</label>
@@ -175,6 +193,16 @@
                                                                            value="${i}"
                                                                            ${!autorisee ? 'disabled' : ''}>
                                                                     <span>${i}</span>
+
+                                                                    <c:if test="${autorisee}">
+                                                                        <select name="categorie_place_${i}"
+                                                                                class="form-control form-control-sm mt-1">
+                                                                            <option value="">-- Catégorie --</option>
+                                                                            <c:forEach var="cat" items="${categoriesClient}">
+                                                                                <option value="${cat.id}">${cat.nom}</option>
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                    </c:if>
                                                                 </label>
                                                             </c:forEach>
                                                         </div>
@@ -202,6 +230,16 @@
                                                                                    value="${i}"
                                                                                    ${!autorisee ? 'disabled' : ''}>
                                                                             <span>${i}</span>
+
+                                                                            <c:if test="${autorisee}">
+                                                                                <select name="categorie_place_${i}"
+                                                                                        class="form-control form-control-sm mt-1">
+                                                                                    <option value="">-- Catégorie --</option>
+                                                                                    <c:forEach var="cat" items="${categoriesClient}">
+                                                                                        <option value="${cat.id}">${cat.nom}</option>
+                                                                                    </c:forEach>
+                                                                                </select>
+                                                                            </c:if>
                                                                         </label>
 
                                                                     </c:forEach>
@@ -244,31 +282,47 @@
 <%@ include file="/WEB-INF/jsp/layout/footer.jsp"%>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
         const checkboxes = document.querySelectorAll(".seat-checkbox");
         const montantAffiche = document.getElementById("montantAffiche");
-
-        // Map des tarifs par numero de place, fournie par le backend
+        // Map des tarifs par numero de place (tarif normal, sans catégorie)
         const tarifParPlace = JSON.parse('${tarifParPlaceJson}');
-
+        // Map des tarifs par numero de place ET par categorie client
+        // Exemple: { "1": { "1": 90000, "2": 50000 }, "2": { ... } }
+        const tarifParPlaceCategorie = JSON.parse('${tarifParPlaceCategorieJson}');
         function calculerMontant() {
             let total = 0;
-
             checkboxes.forEach(cb => {
                 if (cb.checked) {
-                    const num = parseInt(cb.value, 10);
-                    const tarif = tarifParPlace[num] !== undefined ? parseFloat(tarifParPlace[num]) : 0;
-                    total += isNaN(tarif) ? 0 : tarif;
+                    const num = cb.value; // string
+                    const select = document.querySelector('select[name="categorie_place_' + num + '"]');
+                    const idCat = select ? select.value : "";
+                    let tarif = 0;
+                    if (idCat &&
+                        tarifParPlaceCategorie[num] !== undefined &&
+                        tarifParPlaceCategorie[num][idCat] !== undefined) {
+                        // Tarif spécifique à cette catégorie
+                        tarif = parseFloat(tarifParPlaceCategorie[num][idCat]);
+                    } else {
+                        // Par défaut : tarif normal (tarif_actuel) pour le type de place
+                        tarif = tarifParPlace[num] !== undefined ? parseFloat(tarifParPlace[num]) : 0;
+                    }
+                    if (!isNaN(tarif)) {
+                        total += tarif;
+                    }
                 }
             });
-
             if (montantAffiche) {
                 montantAffiche.value = total.toLocaleString('fr-FR') + " Ar";
             }
         }
-
+        // Recalcul quand on coche/décoche une place
         checkboxes.forEach(cb => {
             cb.addEventListener("change", calculerMontant);
+        });
+        // Recalcul quand on change la catégorie d'une place
+        const selectsCategories = document.querySelectorAll('select[name^="categorie_place_"]');
+        selectsCategories.forEach(sel => {
+            sel.addEventListener("change", calculerMontant);
         });
     });
 </script>

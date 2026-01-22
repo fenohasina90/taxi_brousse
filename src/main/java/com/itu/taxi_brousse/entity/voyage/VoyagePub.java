@@ -1,9 +1,5 @@
 package com.itu.taxi_brousse.entity.voyage;
 
-import java.time.LocalTime;
-
-import com.itu.taxi_brousse.entity.core.Voiture;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,30 +14,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "voyage_details")
+@Table(name = "voyage_pub")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoyageDetails {
-    
+public class VoyagePub {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_voyage", nullable = false)
-    private Voyage voyage;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_voiture", nullable = false)
-    private Voiture voiture;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_type_voyage", nullable = false)
-    private TypeVoyage typeVoyage;
-    
-    @Column(name = "heure_depart", nullable = false)
-    private LocalTime heureDepart;
 
+    @ManyToOne
+    @JoinColumn(name = "id_publication")
+    private Publication publication;
+
+    @Column(name = "nb_repetition")
+    private Integer nbRepetition;
+
+    @ManyToOne
+    @JoinColumn(name = "id_voyage_details")
+    private VoyageDetails voyageDetails;
 }

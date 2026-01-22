@@ -325,6 +325,22 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </li>
         </ul>
       </li>
+
+      <!-- PUBLICATIONS -->
+      <li class="nav-item">
+        <a href="#">
+          <i class="la la-bullhorn"></i>
+          <span class="menu-title" data-i18n="Dashboard">PUBLICATIONS</span>
+        </a>
+        <ul class="menu-content">
+          <li>
+            <a class="menu-item" href="/publications/chiffre-affaire">
+              <i class="la la-line-chart"></i>
+              <span data-i18n="eCommerce">Chiffre d'affaire</span>
+            </a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </div>
 </div>

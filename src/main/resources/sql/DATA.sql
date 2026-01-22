@@ -57,3 +57,44 @@ INSERT INTO reservation_status (status) VALUES
 ('COMPLET'),
 ('CONFIRME'),
 ('ANNULE');
+
+
+INSERT INTO categorie_client(nom) VALUES
+('Senior'),
+('Adulte'),
+('Enfant');
+
+INSERT INTO remise_tarif(id_tarif_actuel, id_categorie_client, pourcentage ,montant) VALUES
+(5, 3, 20, ((180000 * 20)/100)),
+(6, 3, 20, ((140000 * 20)/100)),
+(7, 3, 20, ((90000 * 20)/100));
+(7, 2, 0, 50000);
+
+INSERT INTO remise_tarif(id_tarif_actuel, id_categorie_client, pourcentage, montant) VALUES
+(8, 2, 0, 65000),
+(9, 2, 0, 50000),
+(10, 2, 0, 40000);
+
+INSERT INTO remise_tarif(id_tarif_actuel, id_categorie_client, pourcentage, montant) VALUES
+(8, 1, 20, 70000),
+(9, 1, 20, 60000),
+(10, 1, 20, 50000); --
+
+-- Insertion des sociétés
+INSERT INTO societe (nom) VALUES
+('Orinasa Malagasy'),
+('Fitaratra Anjiro'),
+('Trano Fivoarana'),
+('Vola Malagasy'),
+('Sakafo Matsilo');
+
+-- Insertion des publications
+INSERT INTO publication (titre, description, id_societe, montant) VALUES
+('Trano fanofana', 'Trano fanofana tsara tarehy any amoron-dranomasina', 1, 100000.00);
+INSERT INTO publication (titre, description, id_societe, montant) VALUES
+('vqwerty', 'Trano fanofana tsara tarehy', 2, 100000.00);
+
+--Insertion voyage pub
+INSERT INTO voyage_pub (id_publication, nb_repetition, id_voyage_details) VALUES
+(1, 20, 7),
+(2, 10, 6);

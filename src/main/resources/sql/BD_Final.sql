@@ -25,6 +25,21 @@ create table trajet (
     unique (gare_depart, gare_arrivee)
 );
 
+-- Publicite
+create table societe(
+    id serial primary key,
+    nom varchar(50)
+);
+
+create table publication(
+    id serial primary key,
+    titre varchar(100),
+    description text,
+    id_societe int references societe(id),
+    montant decimal(15, 2)
+);
+
+
 
 -- Planification voyages
 
@@ -50,6 +65,13 @@ create table voyage_details(
     unique (id_voyage, id_voiture)
 );
 
+create table voyage_pub(
+    id serial primary key,
+    id_publication int references publication(id),
+    nb_repetition int,
+    id_voyage_details int references voyage_details(id)
+);
+
 create table voyage_details_place_type (
     id serial primary key,
     id_voyage_details int not null references voyage_details(id),
@@ -67,6 +89,21 @@ create table tarif_actuel (
     id_type_voyage int not null references type_voyage(id),
     montant decimal(15,2) not null check (montant > 0),
     created_at timestamp default current_timestamp
+);
+
+create table categorie_client(
+    id serial primary key,
+    nom varchar(50)
+);
+
+create table remise_tarif (
+    id serial primary key,
+    id_tarif_actuel int references tarif_actuel(id),
+    id_categorie_client int references categorie_client(id),
+    -- pourcentage de remise applique au tarif_actuel (ex: 10 pour 10%)
+    pourcentage decimal(5, 2) not null check (pourcentage >= 0),
+    -- montant de remise eventuel ou valeur calculee (optionnel)
+    montant decimal(15, 2)
 );
 
 create table historique_tarif (
@@ -109,6 +146,12 @@ create table reservation_siege (
     numero_place int not null
 );
 
+create table reservation_details (
+    id serial primary key,
+    id_reservation_siege int references reservation_siege(id),
+    id_categorie_client int references categorie_client(id)
+);
+
 -- Date_depart : na izy client tsotra amzao na izy client navita reservation
 create table voyage_passager(
     id serial primary key,
@@ -136,6 +179,8 @@ create table paiement (
     montant decimal(15,2) not null check (montant > 0),
     date_paiement timestamp default current_timestamp
 );
+
+
 
 CREATE INDEX idx_voiture_created_at ON voiture(created_at);
 CREATE INDEX idx_gare_routiere_nom ON gare_routiere(nom);

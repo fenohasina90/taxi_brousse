@@ -1,8 +1,8 @@
-package com.itu.taxi_brousse.entity.voyage;
+package com.itu.taxi_brousse.entity.tarif;
 
-import java.time.LocalTime;
+import java.math.BigDecimal;
 
-import com.itu.taxi_brousse.entity.core.Voiture;
+import com.itu.taxi_brousse.entity.client.CategorieClient;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,30 +18,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "voyage_details")
+@Table(name = "remise_tarif")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoyageDetails {
-    
+public class RemiseTarif {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_voyage", nullable = false)
-    private Voyage voyage;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_voiture", nullable = false)
-    private Voiture voiture;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_type_voyage", nullable = false)
-    private TypeVoyage typeVoyage;
-    
-    @Column(name = "heure_depart", nullable = false)
-    private LocalTime heureDepart;
 
+    @ManyToOne
+    @JoinColumn(name = "id_tarif_actuel", nullable = false)
+    private TarifActuel tarifActuel;
+
+    @ManyToOne
+    @JoinColumn(name = "id_categorie_client", nullable = false)
+    private CategorieClient categorieClient;
+
+    @Column(name = "pourcentage", nullable = false)
+    private BigDecimal pourcentage;
+
+    @Column(name = "montant")
+    private BigDecimal montant;
 }

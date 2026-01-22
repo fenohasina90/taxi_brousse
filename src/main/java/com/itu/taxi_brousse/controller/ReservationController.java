@@ -2,7 +2,9 @@ package com.itu.taxi_brousse.controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.itu.taxi_brousse.service.client.CategorieClientService;
 import com.itu.taxi_brousse.service.core.GareRoutiereService;
 import com.itu.taxi_brousse.service.paiement.paiementService;
 import com.itu.taxi_brousse.service.reservation.ReservationService;
 import com.itu.taxi_brousse.service.voyage.TypeVoyageService;
 import com.itu.taxi_brousse.service.voyage.VoyageService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/reservations")
@@ -29,17 +34,20 @@ public class ReservationController {
     private final VoyageService voyageService;
     private final TypeVoyageService typeVoyageService;
     private final GareRoutiereService gareRoutiereService;
+    private final CategorieClientService categorieClientService;
 
     public ReservationController(ReservationService reservationService,
             com.itu.taxi_brousse.service.paiement.paiementService paiementService,
             VoyageService voyageService,
             TypeVoyageService typeVoyageService,
-            GareRoutiereService gareRoutiereService) {
+            GareRoutiereService gareRoutiereService,
+            CategorieClientService categorieClientService) {
         this.reservationService = reservationService;
         this.paiementService = paiementService;
         this.voyageService = voyageService;
         this.typeVoyageService = typeVoyageService;
         this.gareRoutiereService = gareRoutiereService;
+        this.categorieClientService = categorieClientService;
     }
 
     @GetMapping("")
@@ -135,9 +143,12 @@ public class ReservationController {
         mv.addObject("totalPlaces", reservationService.getCapaciteVoiture(idVoyageDetails));
         mv.addObject("montantUnitaire", reservationService.getTarifUnitaire(idVoyageDetails));
         mv.addObject("tarifParPlaceJson", reservationService.getTarifParPlaceJson(idVoyageDetails));
+        mv.addObject("categoriesClient", categorieClientService.getAll());
+        mv.addObject("tarifParPlaceCategorieJson",
+                    reservationService.getTarifParPlaceEtCategorieJson(idVoyageDetails)); // <-- ajouter
         mv.addObject("idVoyageDetails", idVoyageDetails);
         mv.addObject("modePaiement",paiementService.getListModePaiements());
-        return mv;
+    return mv;
     }
 
     @PostMapping("/ajouter")

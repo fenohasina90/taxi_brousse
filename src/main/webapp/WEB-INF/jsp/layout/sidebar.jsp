@@ -339,6 +339,12 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               <span data-i18n="eCommerce">Chiffre d'affaire</span>
             </a>
           </li>
+          <li>
+            <a class="menu-item" href="/publications/paiements">
+              <i class="la la-money"></i>
+              <span data-i18n="eCommerce">Paiements</span>
+            </a>
+          </li>
         </ul>
       </li>
     </ul>

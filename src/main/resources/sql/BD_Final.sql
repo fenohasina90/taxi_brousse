@@ -80,6 +80,12 @@ create table voyage_details_place_type (
     unique (id_voyage_details, numero_place)
 );
 
+create table paiement_publication (
+    id serial primary key,
+    id_voyage_pub int not null references voyage_pub(id),
+    montant decimal(15,2) not null check (montant > 0),
+    date_paiement timestamp default current_timestamp
+);
 
 -- Tarif
 

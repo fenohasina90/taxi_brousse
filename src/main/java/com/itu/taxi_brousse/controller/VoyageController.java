@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +18,10 @@ import com.itu.taxi_brousse.entity.voyage.VoyageDetails;
 import com.itu.taxi_brousse.service.core.GareRoutiereService;
 import com.itu.taxi_brousse.service.core.TrajetService;
 import com.itu.taxi_brousse.service.core.VoitureService;
-import com.itu.taxi_brousse.service.voyage.VoyageService;
+import com.itu.taxi_brousse.service.voyage.PublicationService;
 import com.itu.taxi_brousse.service.voyage.TypeVoyageService;
 import com.itu.taxi_brousse.service.voyage.VoyageDetailsService;
+import com.itu.taxi_brousse.service.voyage.VoyageService;
 
 @Controller
 @RequestMapping("/voyages")
@@ -32,19 +33,22 @@ public class VoyageController {
     private final TrajetService trajetService;
     private final VoitureService voitureService;
     private final VoyageDetailsService voyageDetailsService;
+    private final PublicationService publicationService;
 
     public VoyageController(VoyageService voyageService,
                             TypeVoyageService typeVoyageService,
                             GareRoutiereService gareRoutiereService,
                             TrajetService trajetService,
                             VoitureService voitureService,
-                            VoyageDetailsService voyageDetailsService) {
+                            VoyageDetailsService voyageDetailsService,
+                            PublicationService publicationService) {
         this.voyageService = voyageService;
         this.typeVoyageService = typeVoyageService;
         this.gareRoutiereService = gareRoutiereService;
         this.trajetService = trajetService;
         this.voitureService = voitureService;
         this.voyageDetailsService = voyageDetailsService;
+        this.publicationService = publicationService;
     }
 
 
@@ -112,6 +116,7 @@ public class VoyageController {
         mv.addObject("idVoyage", idVoyage);
         mv.addObject("liste_voiture", voitureService.getToutesLesVoitures());
         mv.addObject("liste_type_voyage", typeVoyageService.getAllTypesVoyage());
+        mv.addObject("liste_publication", publicationService.getAllPublications());
         return mv;
     }
 
@@ -120,16 +125,23 @@ public class VoyageController {
             @PathVariable("idVoyage") Integer idVoyage,
             @RequestParam("id_voiture") Integer idVoiture,
             @RequestParam("id_type_voyage") Integer idTypeVoyage,
-            @RequestParam("heure_depart") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime heureDepart
+            @RequestParam("heure_depart") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime heureDepart,
+            @RequestParam(value = "id_publication", required = false) Integer[] idPublications,
+            @RequestParam(value = "nb_repetition", required = false) Integer[] nbRepetitions
     ) {
         try {
             var voyageDetails = voyageDetailsService.creerVoyageDetails(idVoyage, idVoiture, idTypeVoyage, heureDepart);
+
+            if (idPublications != null && nbRepetitions != null) {
+                voyageDetailsService.ajouterPublications(voyageDetails.getId(), java.util.Arrays.asList(idPublications), java.util.Arrays.asList(nbRepetitions));
+            }
             return new ModelAndView("redirect:/voyages/details/" + voyageDetails.getId() + "/config-places");
         } catch (Exception e) {
             ModelAndView mv = new ModelAndView("voyage/formulaire_voyage_details");
             mv.addObject("idVoyage", idVoyage);
             mv.addObject("liste_voiture", voitureService.getToutesLesVoitures());
             mv.addObject("liste_type_voyage", typeVoyageService.getAllTypesVoyage());
+            mv.addObject("liste_publication", publicationService.getAllPublications());
             mv.addObject("errorMessage", "Erreur lors de la création du détail de voyage : " + e.getMessage());
             return mv;
         }

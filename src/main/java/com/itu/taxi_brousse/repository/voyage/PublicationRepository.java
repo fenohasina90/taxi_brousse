@@ -38,4 +38,28 @@ public interface PublicationRepository extends JpaRepository<Publication, Intege
 			@Param("dateDebut") LocalDate dateDebut,
 			@Param("dateFin") LocalDate dateFin
 	);
+
+	@Query(value = """
+		SELECT COALESCE(SUM(montant_paye), 0.00)
+		FROM v_ca_publication_diffusion
+		WHERE 1=1
+		AND (CAST(:dateDebut AS TEXT) IS NULL OR date_voyage >= CAST(:dateDebut AS DATE))
+		AND (CAST(:dateFin AS TEXT) IS NULL OR date_voyage <= CAST(:dateFin AS DATE))
+		""", nativeQuery = true)
+	Double sommeMontantPayeDiffusion(
+			@Param("dateDebut") LocalDate dateDebut,
+			@Param("dateFin") LocalDate dateFin
+	);
+
+	@Query(value = """
+		SELECT COALESCE(SUM(reste_a_payer), 0.00)
+		FROM v_ca_publication_diffusion
+		WHERE 1=1
+		AND (CAST(:dateDebut AS TEXT) IS NULL OR date_voyage >= CAST(:dateDebut AS DATE))
+		AND (CAST(:dateFin AS TEXT) IS NULL OR date_voyage <= CAST(:dateFin AS DATE))
+		""", nativeQuery = true)
+	Double sommeResteAPayerDiffusion(
+			@Param("dateDebut") LocalDate dateDebut,
+			@Param("dateFin") LocalDate dateFin
+	);
 }

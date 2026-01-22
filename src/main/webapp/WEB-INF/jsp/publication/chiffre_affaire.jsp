@@ -80,6 +80,10 @@
                                 <h4 class="card-title mb-0">Resultats</h4>
                                 <div>
                                     <strong>Total CA:</strong> ${totalCa}
+                                    &nbsp;|&nbsp;
+                                    <strong>Deja paye:</strong> ${totalPaye}
+                                    &nbsp;|&nbsp;
+                                    <strong>Reste a payer:</strong> ${totalReste}
                                 </div>
                             </div>
                             <div class="card-content">
@@ -99,6 +103,8 @@
                                                 <th>Total repetition</th>
                                                 <th>Montant unitaire (Ar)</th>
                                                 <th>Chiffre d'affaires (Ar)</th>
+                                                <th>Montant paye (Ar)</th>
+                                                <th>Reste a payer (Ar)</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -110,6 +116,8 @@
                                                     <td>${r.totalRepetition}</td>
                                                     <td>${r.montantUnitaire}</td>
                                                     <td>${r.chiffreAffaires}</td>
+                                                    <td>${r.montantPaye}</td>
+                                                    <td>${r.resteAPayer}</td>
                                                 </tr>
                                             </c:forEach>
                                             </tbody>

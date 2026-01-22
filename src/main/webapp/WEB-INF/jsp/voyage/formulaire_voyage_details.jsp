@@ -94,6 +94,50 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Diffusion publications -->
+                                            <div class="form-group row">
+                                                <label class="col-md-3 label-control">Publications</label>
+                                                <div class="col-md-9">
+                                                    <div class="custom-control custom-checkbox mb-1">
+                                                        <input type="checkbox" class="custom-control-input" id="toggleDiffusion">
+                                                        <label class="custom-control-label" for="toggleDiffusion">Diffuser des publications pour ce voyage</label>
+                                                    </div>
+
+                                                    <div id="diffusionPanel" style="display:none; border: 1px solid #e5e5e5; padding: 12px; border-radius: 4px;">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <strong>Diffusions</strong>
+                                                            <button type="button" class="btn btn-sm btn-outline-primary" id="addDiffusionBtn">
+                                                                <i class="la la-plus"></i> Ajouter
+                                                            </button>
+                                                        </div>
+
+                                                        <div id="diffusionRows"></div>
+                                                        <small class="text-muted">Laissez vide ou 0 pour ignorer une ligne.</small>
+
+                                                        <template id="diffusionRowTemplate">
+                                                            <div class="form-group row mb-1">
+                                                                <div class="col-md-7">
+                                                                    <select name="id_publication" class="form-control">
+                                                                        <option value="">-- Choisir une publication --</option>
+                                                                        <c:forEach var="p" items="${liste_publication}">
+                                                                            <option value="${p.id}">${p.titre}</option>
+                                                                        </c:forEach>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="number" min="0" name="nb_repetition" class="form-control" placeholder="Repetition" />
+                                                                </div>
+                                                                <div class="col-md-2 text-right">
+                                                                    <button type="button" class="btn btn-sm btn-outline-danger btn-remove-diffusion">
+                                                                        <i class="la la-trash"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                         <div class="form-actions text-right">
@@ -120,5 +164,62 @@
 </div>
 
 <%@ include file="/WEB-INF/jsp/layout/footer.jsp"%>
+
+<script type="text/javascript">
+    (function () {
+        var toggle = document.getElementById('toggleDiffusion');
+        var panel = document.getElementById('diffusionPanel');
+        var rows = document.getElementById('diffusionRows');
+        var addBtn = document.getElementById('addDiffusionBtn');
+        var tpl = document.getElementById('diffusionRowTemplate');
+
+        if (!toggle || !panel || !rows || !addBtn || !tpl) {
+            return;
+        }
+
+        function setEnabled(enabled) {
+            var inputs = panel.querySelectorAll('select, input');
+            inputs.forEach(function (el) {
+                el.disabled = !enabled;
+            });
+        }
+
+        function wireRemoveButtons() {
+            var buttons = rows.querySelectorAll('.btn-remove-diffusion');
+            buttons.forEach(function (btn) {
+                if (btn.dataset.bound === '1') return;
+                btn.dataset.bound = '1';
+                btn.addEventListener('click', function () {
+                    var row = btn.closest('.form-group');
+                    if (row) {
+                        rows.removeChild(row);
+                    }
+                    if (rows.children.length === 0) {
+                        createRow();
+                    }
+                });
+            });
+        }
+
+        function createRow() {
+            var fragment = tpl.content.cloneNode(true);
+            rows.appendChild(fragment);
+            wireRemoveButtons();
+        }
+
+        toggle.addEventListener('change', function () {
+            panel.style.display = toggle.checked ? '' : 'none';
+            setEnabled(toggle.checked);
+            if (toggle.checked && rows.children.length === 0) createRow();
+        });
+
+        addBtn.addEventListener('click', function () {
+            createRow();
+        });
+
+        // init
+        setEnabled(false);
+    })();
+</script>
 </body>
 </html>

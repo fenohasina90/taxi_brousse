@@ -11,10 +11,13 @@ import com.itu.taxi_brousse.entity.voyage.TypeVoyage;
 import com.itu.taxi_brousse.entity.voyage.Voyage;
 import com.itu.taxi_brousse.entity.voyage.VoyageDetails;
 import com.itu.taxi_brousse.entity.voyage.VoyageDetailsPlaceType;
+import com.itu.taxi_brousse.entity.voyage.VoyagePub;
 import com.itu.taxi_brousse.repository.core.VoitureRepository;
+import com.itu.taxi_brousse.repository.voyage.PublicationRepository;
 import com.itu.taxi_brousse.repository.voyage.TypeVoyageRepository;
 import com.itu.taxi_brousse.repository.voyage.VoyageDetailsPlaceTypeRepository;
 import com.itu.taxi_brousse.repository.voyage.VoyageDetailsRepository;
+import com.itu.taxi_brousse.repository.voyage.VoyagePubRepository;
 import com.itu.taxi_brousse.repository.voyage.VoyageRepository;
 
 @Service
@@ -25,17 +28,23 @@ public class VoyageDetailsService {
     private final VoitureRepository voitureRepository;
     private final TypeVoyageRepository typeVoyageRepository;
     private final VoyageDetailsPlaceTypeRepository voyageDetailsPlaceTypeRepository;
+        private final PublicationRepository publicationRepository;
+        private final VoyagePubRepository voyagePubRepository;
 
     public VoyageDetailsService(VoyageDetailsRepository voyageDetailsRepository,
                                 VoyageRepository voyageRepository,
                                 VoitureRepository voitureRepository,
                                 TypeVoyageRepository typeVoyageRepository,
-                                VoyageDetailsPlaceTypeRepository voyageDetailsPlaceTypeRepository) {
+                                                                VoyageDetailsPlaceTypeRepository voyageDetailsPlaceTypeRepository,
+                                                                PublicationRepository publicationRepository,
+                                                                VoyagePubRepository voyagePubRepository) {
         this.voyageDetailsRepository = voyageDetailsRepository;
         this.voyageRepository = voyageRepository;
         this.voitureRepository = voitureRepository;
         this.typeVoyageRepository = typeVoyageRepository;
         this.voyageDetailsPlaceTypeRepository = voyageDetailsPlaceTypeRepository;
+                this.publicationRepository = publicationRepository;
+                this.voyagePubRepository = voyagePubRepository;
     }
 
     @Transactional
@@ -91,6 +100,40 @@ public class VoyageDetailsService {
     public void supprimerConfigurationPlaces(Integer idVoyageDetails) {
         voyageDetailsPlaceTypeRepository.deleteByVoyageDetailsId(idVoyageDetails);
     }
+
+        @Transactional
+        public void ajouterPublications(Integer idVoyageDetails, List<Integer> idPublications, List<Integer> nbRepetitions) {
+                if (idPublications == null || nbRepetitions == null) {
+                        return;
+                }
+                if (idPublications.size() != nbRepetitions.size()) {
+                        throw new IllegalArgumentException("Donnees de diffusion invalides");
+                }
+
+                VoyageDetails vd = voyageDetailsRepository.findById(idVoyageDetails)
+                                .orElseThrow(() -> new IllegalArgumentException("Voyage introuvable"));
+
+                for (int i = 0; i < idPublications.size(); i++) {
+                        Integer idPub = idPublications.get(i);
+                        Integer nbRep = nbRepetitions.get(i);
+
+                        if (idPub == null) continue;
+                        if (nbRep == null) nbRep = 0;
+                        if (nbRep < 0) {
+                                throw new IllegalArgumentException("Le nombre de repetition doit etre >= 0");
+                        }
+                        if (nbRep == 0) continue;
+
+                        var pub = publicationRepository.findById(idPub)
+                                        .orElseThrow(() -> new IllegalArgumentException("Publication introuvable"));
+
+                        VoyagePub vp = new VoyagePub();
+                        vp.setVoyageDetails(vd);
+                        vp.setPublication(pub);
+                        vp.setNbRepetition(nbRep);
+                        voyagePubRepository.save(vp);
+                }
+        }
 
         public VoyageDetails getById(Integer id) {
                 return voyageDetailsRepository.findById(id)

@@ -96,5 +96,5 @@ INSERT INTO publication (titre, description, id_societe, montant) VALUES
 
 --Insertion voyage pub
 INSERT INTO voyage_pub (id_publication, nb_repetition, id_voyage_details) VALUES
+(2, 10, 5);
 (1, 20, 7),
-(2, 10, 6);

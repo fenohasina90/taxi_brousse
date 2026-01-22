@@ -32,14 +32,20 @@ public class PublicationController {
             mv.addObject("errorMessage", "La date debut doit etre avant la date fin");
             mv.addObject("caPublications", java.util.List.of());
             mv.addObject("totalCa", 0.0);
+            mv.addObject("totalPaye", 0.0);
+            mv.addObject("totalReste", 0.0);
             return mv;
         }
 
         var ca = publicationService.listerChiffreAffaireDiffusion(dateDebut, dateFin);
         var total = publicationService.sommeChiffreAffaireDiffusion(dateDebut, dateFin);
+        var totalPaye = publicationService.sommeMontantPayeDiffusion(dateDebut, dateFin);
+        var totalReste = publicationService.sommeResteAPayerDiffusion(dateDebut, dateFin);
 
         mv.addObject("caPublications", ca);
         mv.addObject("totalCa", total);
+        mv.addObject("totalPaye", totalPaye);
+        mv.addObject("totalReste", totalReste);
         return mv;
     }
 }

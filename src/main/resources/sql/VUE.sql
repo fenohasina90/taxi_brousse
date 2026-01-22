@@ -164,25 +164,52 @@ JOIN type_voyage tv ON ta.id_type_voyage = tv.id;
 
 
 -- Chiffre d'affaires des diffusions des publications (filtrer ensuite avec BETWEEN sur date_voyage)
-CREATE OR REPLACE VIEW v_ca_publication_diffusion AS
+CREATE OR REPLACE VIEW v_voyage_pub_paiement AS
 SELECT
+    vp.id AS id_voyage_pub,
     v.date_voyage,
+    vd.heure_depart,
     p.id AS id_publication,
     p.titre,
     s.id AS id_societe,
     s.nom AS societe,
-    COALESCE(SUM(COALESCE(vp.nb_repetition, 0)), 0) AS total_repetition,
+    COALESCE(vp.nb_repetition, 0) AS nb_repetition,
     COALESCE(p.montant, 0.00) AS montant_unitaire,
-    COALESCE(SUM(COALESCE(vp.nb_repetition, 0) * COALESCE(p.montant, 0.00)), 0.00) AS chiffre_affaires
+    COALESCE(COALESCE(vp.nb_repetition, 0) * COALESCE(p.montant, 0.00), 0.00) AS total_a_payer,
+    COALESCE(pp.montant_paye, 0.00) AS montant_paye,
+    GREATEST(
+        COALESCE(COALESCE(vp.nb_repetition, 0) * COALESCE(p.montant, 0.00), 0.00) - COALESCE(pp.montant_paye, 0.00),
+        0.00
+    ) AS reste_a_payer
 FROM voyage_pub vp
 JOIN publication p ON vp.id_publication = p.id
 LEFT JOIN societe s ON p.id_societe = s.id
 JOIN voyage_details vd ON vp.id_voyage_details = vd.id
 JOIN voyage v ON vd.id_voyage = v.id
+LEFT JOIN (
+    SELECT id_voyage_pub, SUM(montant) AS montant_paye
+    FROM paiement_publication
+    GROUP BY id_voyage_pub
+) pp ON pp.id_voyage_pub = vp.id;
+
+
+CREATE OR REPLACE VIEW v_ca_publication_diffusion AS
+SELECT
+    x.date_voyage,
+    x.id_publication,
+    x.titre,
+    x.id_societe,
+    x.societe,
+    COALESCE(SUM(x.nb_repetition), 0) AS total_repetition,
+    COALESCE(x.montant_unitaire, 0.00) AS montant_unitaire,
+    COALESCE(SUM(x.total_a_payer), 0.00) AS chiffre_affaires,
+    COALESCE(SUM(x.montant_paye), 0.00) AS montant_paye,
+    COALESCE(SUM(x.reste_a_payer), 0.00) AS reste_a_payer
+FROM v_voyage_pub_paiement x
 GROUP BY
-    v.date_voyage,
-    p.id,
-    p.titre,
-    s.id,
-    s.nom,
-    p.montant;
+    x.date_voyage,
+    x.id_publication,
+    x.titre,
+    x.id_societe,
+    x.societe,
+    x.montant_unitaire;

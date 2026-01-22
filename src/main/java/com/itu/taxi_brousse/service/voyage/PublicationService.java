@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.itu.taxi_brousse.entity.voyage.Publication;
 import com.itu.taxi_brousse.projection.PublicationDiffusionCaProjection;
 import com.itu.taxi_brousse.repository.voyage.PublicationRepository;
 
@@ -23,5 +24,17 @@ public class PublicationService {
 
     public Double sommeChiffreAffaireDiffusion(LocalDate dateDebut, LocalDate dateFin) {
         return publicationRepository.sommeChiffreAffaireDiffusion(dateDebut, dateFin);
+    }
+
+    public Double sommeMontantPayeDiffusion(LocalDate dateDebut, LocalDate dateFin) {
+        return publicationRepository.sommeMontantPayeDiffusion(dateDebut, dateFin);
+    }
+
+    public Double sommeResteAPayerDiffusion(LocalDate dateDebut, LocalDate dateFin) {
+        return publicationRepository.sommeResteAPayerDiffusion(dateDebut, dateFin);
+    }
+
+    public List<Publication> getAllPublications() {
+        return publicationRepository.findAll();
     }
 }

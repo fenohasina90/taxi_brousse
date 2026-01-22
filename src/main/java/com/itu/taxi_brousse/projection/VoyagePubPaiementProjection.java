@@ -1,16 +1,19 @@
 package com.itu.taxi_brousse.projection;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
-public interface PublicationDiffusionCaProjection {
+public interface VoyagePubPaiementProjection {
+    Integer getIdVoyagePub();
     LocalDate getDateVoyage();
+    LocalTime getHeureDepart();
     Integer getIdPublication();
     String getTitre();
     Integer getIdSociete();
     String getSociete();
-    Long getTotalRepetition();
+    Integer getNbRepetition();
     Double getMontantUnitaire();
-    Double getChiffreAffaires();
+    Double getTotalAPayer();
     Double getMontantPaye();
     Double getResteAPayer();
 }
